@@ -3,7 +3,7 @@
     <div class="search-wrapper">
       
         <span class="search-icon">
-        <img src="../assets/search_icon.png" alt="Search Icon" />  
+        <img src="../assets/search_icon.png" alt="Search Icon" width="16" height="16" />  
     </span>
 
       <input
@@ -11,15 +11,16 @@
         type="text"
         placeholder="Search for ID or name"
         class="search-input"
+        aria-label="Search customers"
       />
     </div>
-    <div class="results-count">{{ totalResults }} of {{ totalResults }}</div>
+    <div class="results-count">{{ filteredResults }} of {{ totalResults }}</div>
   </div>
 </template>
   
   <script>
 export default {
-  props: ["value", "totalResults"],
+  props: ["value", "totalResults", "filteredResults"],
   computed: {
     query: {
       get() {
@@ -41,7 +42,11 @@ export default {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 5px;
-
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 16px;
+  z-index: 10;
 }
 .search-wrapper {
   position: relative;
@@ -53,7 +58,7 @@ export default {
 .search-icon {
   position: absolute;
   left: 12px;
-  top: 55%;
+  top: 50%;
   transform: translateY(-50%);
   color: #666;
 }

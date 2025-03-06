@@ -1,18 +1,15 @@
 <template>
-  <div class="customer-list" v-if="customers.length">
+  <div class="customer-list" v-if="customers?.length">
     <div class="customer-item" v-for="customer in customers" :key="customer.id">
-      <!-- Column 1: Initials -->
       <div class="initials-column">
-        <!-- <div class="initials">{{ getInitials(customer.name) }}</div> -->
         <div class="customer-avatar">
           {{ getInitials(customer.name) }}
           <span class="verified-badge" v-if="customer.verified">
-            <img src="../assets/ok_icon.png" alt="OK Icon" />
+            <img src="../assets/ok_icon.png" alt="Verified" width="12" height="12" />
           </span>
         </div>
       </div>
 
-      <!-- Column 2: Customer ID and Name -->
       <div class="customer-info-column">
         <p class="customer-id-name">
           <span class="customer-id">{{ customer.id }}</span>
@@ -24,28 +21,31 @@
         </p>
       </div>
 
-      <!-- Column 3: City -->
       <div class="customer-city-column">
         <p class="customer-city truncate">{{ customer.city }}</p>
       </div>
 
-      <!-- Column 4: Start Return Button -->
       <div class="start-return-column">
-        <button class="start-return">Start return →</button>
+        <button 
+          class="start-return" 
+          aria-label="Start return for customer"
+          @click="$emit('start-return', customer)"
+        >Start return →</button>
       </div>
     </div>
   </div>
   <p v-else class="no-results">No customers found</p>
 </template>
   
-  <script>
+<script>
 export default {
   props: ["customers"],
   methods: {
     getInitials(name) {
+      if (!name) return '';
       return name
         .split(" ")
-        .map((n) => n[0].toUpperCase())
+        .map((n) => n[0]?.toUpperCase() || '')
         .slice(0, 2)
         .join("");
     },
@@ -53,30 +53,32 @@ export default {
 };
 </script>
   
-  <style scoped lang="scss">
+<style scoped lang="scss">
 @import "../styles/variables.scss";
 
 .no-results {
   text-align: center;
 }
+
 .customer-list {
   border-top: 1px solid #c7c6c6;
-
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+  max-height: calc(100vh - 270px); 
+  overflow-y: auto;
+  padding-top: 1px; 
 }
 
 .customer-item {
   display: grid;
-  grid-template-columns: 50px 2fr 1fr auto;
+  grid-template-columns: 50px minmax(0, 2fr) minmax(0, 1fr) auto;
+  gap: 24px;
   align-items: center;
   background-color: #ffffff;
   transition: background-color 0.2s ease;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding: 16px 24px;
   border-bottom: 1px solid #eee;
-
   border-radius: 8px;
 
   &:hover {
@@ -183,7 +185,7 @@ export default {
 .customer-city-column {
   font-weight: $font-medium;
   font-size: 14px;
-  overflow: hidden; /* Prevent overflow */
+  overflow: hidden;
 }
 
 .start-return-column {
@@ -202,7 +204,7 @@ export default {
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: $grey-background-light; // may change later
+    background-color: darken($grey-background-light, 5%);
   }
 }
 
